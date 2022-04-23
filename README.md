@@ -30,4 +30,5 @@ https://developers.themoviedb.org/3/getting-started/introduction
 - [ ] 見終わった時間にExpiredがかかる
 - [ ] 登録時にSNSアカウントへのリンクを任意で公開できる
 - [ ] 現在他のユーザーがどこで何の映画を見ているかお互いに見える
+- [ ] ユーザー詳細画面の情報を充実
 - [ ] CIを作る
