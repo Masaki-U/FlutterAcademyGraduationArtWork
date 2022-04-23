@@ -20,6 +20,13 @@ samples, guidance on mobile development, and a full API reference.
 
 https://developers.themoviedb.org/3/getting-started/introduction
 
+### 技術的特徴
+
+- ViewとModelでマルチパッケージでの切り分け
+- APIを叩く関数の共通化
+
+### 機能一覧
+
 - [ ] 一覧画面の作成
 - [ ] 詳細画面の作成
 - [ ] 初回起動で大人かどうかの確認とローカル保存
