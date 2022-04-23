@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:model/ResponseMovieSearch.dart';
+import 'package:model/apiHandler.dart';
+
+import 'detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,17 +52,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Results> _movieList = [];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  void fetchListData() {
+    fetchMovieList((res) {
+      final result = res.results;
+      if (result != null) {
+        setState(() {
+          _movieList = result;
+        });
+      }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchListData();
   }
 
   @override
@@ -78,38 +88,52 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            child: ListView.builder(
+              itemCount: _movieList.length,
+              itemBuilder: (listContext, idx) {
+                return listItem(context, _movieList[idx]);
+              },
+            )),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Widget listItem(BuildContext context, Results result) {
+    final posterPath = result.posterPath;
+    return Card(
+      child: ListTile(
+        title: Text(result.title ?? ""),
+        leading: Image.network(posterPath != null ? imagePath + posterPath : "",
+            errorBuilder: (context, error, stackTrace) {
+          return const Text("画像\nなし");
+        }),
+        onTap: () {
+          final id = result.id;
+          if (id != null) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MovieDetail(id)));
+          }
+        },
+      ),
+    );
+  }
 }
+
+const imagePath = "https://image.tmdb.org/t/p/w1280";
