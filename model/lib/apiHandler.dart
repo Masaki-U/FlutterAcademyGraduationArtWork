@@ -5,11 +5,18 @@ import 'package:http/http.dart' as http;
 
 import 'ResponseMovieDetail.dart';
 import 'ResponseMovieSearch.dart';
+import 'ResponseMovieCategory.dart';
 import 'apiKey.dart';
 
 Future fetchMovieList(Function(ResponseMovieSearch res) action) async {
   await fetch(baseUrl + "discover/movie?&" + apiKey, ApiContext.common((json) {
     action(ResponseMovieSearch.fromJson(json));
+  }));
+}
+
+Future fetchMovieCategoryList(Function(ResponseMovieCategory res) action) async {
+  await fetch(baseUrl + "/genre/movie/list?&" + apiKey, ApiContext.common((json) {
+    action(ResponseMovieCategory.fromJson(json));
   }));
 }
 
