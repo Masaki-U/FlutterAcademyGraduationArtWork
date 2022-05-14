@@ -126,9 +126,10 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
         onTap: () {
           final id = result.id;
-          if (id != null) {
+          final title = result.title;
+          if (id != null && title != null) {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MovieDetail(id)));
+                MaterialPageRoute(builder: (context) => MovieDetail(id, title)));
           }
         },
       ),
