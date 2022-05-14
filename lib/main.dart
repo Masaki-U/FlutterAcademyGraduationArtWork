@@ -120,10 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Card(
       child: ListTile(
         title: Text(result.title ?? ""),
-        leading: Image.network(posterPath != null ? imagePath + posterPath : "",
-            errorBuilder: (context, error, stackTrace) {
-          return const Text("画像\nなし");
-        }),
+        leading: thumbnail(context, posterPath),
         onTap: () {
           showModalBottomSheet(
             context: context,
@@ -162,10 +159,57 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text("詳細を見る"),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: thumbnail(context, result.posterPath),
+              ),
+              Flexible(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                              child: Text(result.title ?? "",
+                                  style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w300))
+                          ),
+                          const Spacer(),
+                          IconButton(
+                              onPressed: () {}, icon: const Icon(Icons.close)),
+                        ],
+                      ),
+                      Text("評価: " +
+                          (result.voteCount?.toString() ?? "-") +
+                          "件" +
+                          "　☆" +
+                          (result.voteAverage?.toString() ?? "0.0")),
+                      Text("公開日: " +
+                          (result.releaseDate?.toString() ?? "0000-00-00")),
+                    ],
+                  ))
+            ],
+          ),
+          Row(
+            children: const [
+              Spacer(),
+              Text("詳細を見る"),
+            ],
+          )
         ],
       ),
     );
+  }
+
+  Widget thumbnail(BuildContext context, String? posterPath) {
+    return Image.network(posterPath != null ? imagePath + posterPath : "",
+        errorBuilder: (context, error, stackTrace) {
+      return const Text("画像\nなし");
+    });
   }
 }
 
