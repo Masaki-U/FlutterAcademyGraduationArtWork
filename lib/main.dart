@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:model/ResponseMovieCategory.dart';
 import 'package:model/ResponseMovieSearch.dart';
 import 'package:model/apiHandler.dart';
 
@@ -53,6 +54,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Results> _movieList = [];
+  List<Genres> _movieCategoryList = [];
 
   void fetchListData() {
     fetchMovieList((res) {
@@ -65,10 +67,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void fetchCategoryData() {
+    fetchMovieCategoryList((res) {
+      final result = res.genres;
+      if (result != null) {
+        setState(() {
+          _movieCategoryList = result;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fetchListData();
+    fetchCategoryData();
   }
 
   @override
