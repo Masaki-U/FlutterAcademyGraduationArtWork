@@ -138,24 +138,22 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: () {
           showModalBottomSheet(
             context: context,
-            backgroundColor: Colors.white.withOpacity(0.0),
+            backgroundColor: Colors.transparent,
             builder: (builder) => IntrinsicWidth(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Spacer(),
+                  Expanded(child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(color: Colors.transparent),
+                  )),
                   GestureDetector(
                       child: bottomSheet(context, result),
                       onTap: () {
-                        final id = result.id;
-                        final title = result.title;
-                        if (id != null && title != null) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MovieDetail(id, title)));
-                        }
+                        navigate(result);
                       })
                 ],
               ),
@@ -193,7 +191,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       fontWeight: FontWeight.w300))),
                           const Spacer(),
                           IconButton(
-                              onPressed: () {}, icon: const Icon(Icons.close)),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.close)),
                         ],
                       ),
                       Text("評価: " +
@@ -203,26 +204,26 @@ class _MyHomePageState extends State<MyHomePage> {
                           (result.voteAverage?.toString() ?? "0.0")),
                       Text("公開日: " +
                           (result.releaseDate?.toString() ?? "0000-00-00")),
-                      Wrap(
-                          spacing: 2.0,
-                          children:
-                              categoryChip(context, result, _movieCategoryList))
+                      MaterialButton(
+                          onPressed: () {
+                            navigate(result);
+                          },
+                          color: Colors.blue,
+                          child: const Text("詳細を見る")),
                     ],
                   ))
             ],
           ),
-          Row(
-            children: const [
-              Spacer(),
-              Text("詳細を見る"),
-            ],
-          )
+          Wrap(
+              spacing: 2.0,
+              children: categoryChip(context, result, _movieCategoryList))
         ],
       ),
     );
   }
 
-  List<Widget> categoryChip(BuildContext context, Results result, List<Genres> genres) {
+  List<Widget> categoryChip(
+      BuildContext context, Results result, List<Genres> genres) {
     final genreIds = result.genreIds ?? [];
     return genres
         .map((e) {
@@ -235,7 +236,8 @@ class _MyHomePageState extends State<MyHomePage> {
           return result;
         })
         .where((element) => element.isNotEmpty)
-        .map((e) => Chip(label: Text(e))).toList();
+        .map((e) => Chip(label: Text(e)))
+        .toList();
   }
 
   Widget thumbnail(BuildContext context, String? posterPath) {
@@ -243,6 +245,16 @@ class _MyHomePageState extends State<MyHomePage> {
         errorBuilder: (context, error, stackTrace) {
       return const Text("画像\nなし");
     });
+  }
+
+  navigate(Results result) {
+    Navigator.pop(context);
+    final id = result.id;
+    final title = result.title;
+    if (id != null && title != null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MovieDetail(id, title)));
+    }
   }
 }
 
