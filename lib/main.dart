@@ -190,8 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(result.title ?? "",
                                   style: const TextStyle(
                                       fontSize: 18.0,
-                                      fontWeight: FontWeight.w300))
-                          ),
+                                      fontWeight: FontWeight.w300))),
                           const Spacer(),
                           IconButton(
                               onPressed: () {}, icon: const Icon(Icons.close)),
@@ -204,6 +203,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           (result.voteAverage?.toString() ?? "0.0")),
                       Text("公開日: " +
                           (result.releaseDate?.toString() ?? "0000-00-00")),
+                      Wrap(
+                          spacing: 2.0,
+                          children:
+                              categoryChip(context, result, _movieCategoryList))
                     ],
                   ))
             ],
@@ -217,6 +220,22 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  List<Widget> categoryChip(BuildContext context, Results result, List<Genres> genres) {
+    final genreIds = result.genreIds ?? [];
+    return genres
+        .map((e) {
+          String result;
+          if (genreIds.contains(e.id)) {
+            result = e.name ?? "";
+          } else {
+            result = "";
+          }
+          return result;
+        })
+        .where((element) => element.isNotEmpty)
+        .map((e) => Chip(label: Text(e))).toList();
   }
 
   Widget thumbnail(BuildContext context, String? posterPath) {
