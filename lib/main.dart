@@ -125,13 +125,45 @@ class _MyHomePageState extends State<MyHomePage> {
           return const Text("画像\nなし");
         }),
         onTap: () {
-          final id = result.id;
-          final title = result.title;
-          if (id != null && title != null) {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MovieDetail(id, title)));
-          }
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.white.withOpacity(0.0),
+            builder: (builder) => IntrinsicWidth(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Spacer(),
+                  GestureDetector(
+                      child: bottomSheet(context, result),
+                      onTap: () {
+                        final id = result.id;
+                        final title = result.title;
+                        if (id != null && title != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MovieDetail(id, title)));
+                        }
+                      })
+                ],
+              ),
+            ),
+          );
         },
+      ),
+    );
+  }
+
+  Widget bottomSheet(BuildContext context, Results result) {
+    return Card(
+      color: Colors.white,
+      elevation: 0.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text("詳細を見る"),
+        ],
       ),
     );
   }
