@@ -111,7 +111,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   Widget floatingButton() {
     return FloatingActionButton(
-      child: const Icon(Icons.image),
+      backgroundColor: Colors.white,
+      child: const Icon(Icons.image, color: Colors.blue),
       onPressed: () {
         setState(() {
           isImageMode = true;
@@ -145,7 +146,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         Card(
           child: ListTile(
             title: Text(title,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
           ),
         ),
         Flexible(
@@ -153,16 +155,20 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-              const Padding(padding: EdgeInsets.only(left: 8, top: 8), child: Text(
+              const Padding(
+                  padding: EdgeInsets.only(left: 8, top: 8),
+                  child: Text(
                     "評価",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                  )) ,
+                  )),
               popular(detail?.voteAverage)
             ]))),
-        Expanded(child: Image.network(backdropPath != null ? imagePath + backdropPath : "",
-            errorBuilder: (context, error, stackTrace) {
-              return const Text("画像\nなし");
-            })),
+        Expanded(
+            child: Image.network(
+                backdropPath != null ? imagePath + backdropPath : "",
+                errorBuilder: (context, error, stackTrace) {
+          return const Text("画像\nなし");
+        })),
         MaterialButton(
             color: Theme.of(context).primaryColor,
             minWidth: double.infinity,
