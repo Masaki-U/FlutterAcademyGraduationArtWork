@@ -139,6 +139,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   }
 
   Widget detailItem(String title, ResponseMovieDetail? detail) {
+    final backdropPath = detail?.backdropPath;
     return Column(
       children: [
         Card(
@@ -158,7 +159,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   )) ,
               popular(detail?.voteAverage)
             ]))),
-        const Expanded(child: Spacer()),
+        Expanded(child: Image.network(backdropPath != null ? imagePath + backdropPath : "",
+            errorBuilder: (context, error, stackTrace) {
+              return const Text("画像\nなし");
+            })),
         MaterialButton(
             color: Theme.of(context).primaryColor,
             minWidth: double.infinity,
