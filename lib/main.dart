@@ -139,25 +139,26 @@ class _MyHomePageState extends State<MyHomePage> {
           showModalBottomSheet(
             context: context,
             backgroundColor: Colors.transparent,
-            builder: (builder) => IntrinsicWidth(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(color: Colors.transparent),
-                  )),
-                  GestureDetector(
-                      child: bottomSheet(context, result),
-                      onTap: () {
-                        navigate(result);
-                      })
-                ],
-              ),
-            ),
+            builder: (builder) =>
+                IntrinsicWidth(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(color: Colors.transparent),
+                      )),
+                      GestureDetector(
+                          child: bottomSheet(context, result),
+                          onTap: () {
+                            navigate(result);
+                          })
+                    ],
+                  ),
+                ),
           );
         },
       ),
@@ -222,19 +223,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  List<Widget> categoryChip(
-      BuildContext context, Results result, List<Genres> genres) {
+  List<Widget> categoryChip(BuildContext context, Results result,
+      List<Genres> genres) {
     final genreIds = result.genreIds ?? [];
     return genres
         .map((e) {
-          String result;
-          if (genreIds.contains(e.id)) {
-            result = e.name ?? "";
-          } else {
-            result = "";
-          }
-          return result;
-        })
+      String result;
+      if (genreIds.contains(e.id)) {
+        result = e.name ?? "";
+      } else {
+        result = "";
+      }
+      return result;
+    })
         .where((element) => element.isNotEmpty)
         .map((e) => Chip(label: Text(e)))
         .toList();
@@ -243,8 +244,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget thumbnail(BuildContext context, String? posterPath) {
     return Image.network(posterPath != null ? imagePath + posterPath : "",
         errorBuilder: (context, error, stackTrace) {
-      return const Text("画像\nなし");
-    });
+          return const Text("画像\nなし");
+        });
   }
 
   navigate(Results result) {
