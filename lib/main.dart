@@ -207,43 +207,51 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Flexible(
                   flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(
-                              child: Text(result.title ?? "",
-                                  style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w300))),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.close)),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Text(result.title ?? "",
+                                      style: const TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w300))),
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          Text("評価: " +
+                              (result.voteCount?.toString() ?? "-") +
+                              "件" +
+                              "　☆" +
+                              (result.voteAverage?.toString() ?? "0.0")),
+                          Text("公開日: " +
+                              (result.releaseDate?.toString() ?? "0000-00-00")),
+                          Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: MaterialButton(
+                                color: Theme.of(context).primaryColor,
+                                child: button("詳細を見る"),
+                                onPressed: () {
+                                  navigate(result);
+                                },
+                              )),
                         ],
-                      ),
-                      Text("評価: " +
-                          (result.voteCount?.toString() ?? "-") +
-                          "件" +
-                          "　☆" +
-                          (result.voteAverage?.toString() ?? "0.0")),
-                      Text("公開日: " +
-                          (result.releaseDate?.toString() ?? "0000-00-00")),
-                      MaterialButton(
-                          onPressed: () {
-                            navigate(result);
-                          },
-                          color: Colors.blue,
-                          child: const Text("詳細を見る")),
-                    ],
-                  ))
+                      )))
             ],
           ),
-          Wrap(
-              spacing: 2.0,
-              children: categoryChip(context, result, _movieCategoryList))
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Wrap(
+                  spacing: 2.0,
+                  children: categoryChip(context, result, _movieCategoryList)))
         ],
       ),
     );

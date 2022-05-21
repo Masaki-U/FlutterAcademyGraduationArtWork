@@ -145,8 +145,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           ),
         ),
         MaterialButton(
+            color: Theme.of(context).primaryColor,
             minWidth: double.infinity,
-            child: const Text("データベース"),
+            child: button("データベース"),
             onPressed: () async {
               final id = detail?.id;
               final url = "https://www.themoviedb.org/movie/" + id.toString();
@@ -155,8 +156,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               }
             }),
         MaterialButton(
+            color: Theme.of(context).primaryColor,
             minWidth: double.infinity,
-            child: const Text("公式サイト"),
+            child: button("公式サイト"),
             onPressed: () async {
               final url = detail?.homepage;
               if (url != null && await canLaunchUrl(Uri.parse(url))) {
@@ -169,3 +171,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 }
 
 const imagePath = "https://image.tmdb.org/t/p/w1280";
+
+Widget button(String text) {
+  return Text(text, style: const TextStyle(
+      color: Colors.white
+  ),);
+}
