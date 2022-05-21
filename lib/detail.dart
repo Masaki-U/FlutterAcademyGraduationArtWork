@@ -76,42 +76,40 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Stack(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
             children: [
               backgroundImage(_movieDetail),
-              detailItem(_movieDetail)
+              isImageMode ? const Spacer() : detailItem(_movieDetail)
             ]),
       ), // This trai
-      floatingActionButton: floatingButton(), // ling comma makes auto-formatting nicer for build methods.
+      floatingActionButton: isImageMode
+          ? const Spacer()
+          : floatingButton(), // ling comma makes auto-formatting nicer for build methods.
     );
   }
 
   Widget floatingButton() {
-    if (isImageMode) {
-      return const Spacer();
-    } else {
-      return FloatingActionButton(
-        child: const Icon(Icons.image),
-        onPressed: () {
-          setState(() {
-            isImageMode = true;
-          });
-        },
-      );
-    }
+    return FloatingActionButton(
+      child: const Icon(Icons.image),
+      onPressed: () {
+        setState(() {
+          isImageMode = true;
+        });
+      },
+    );
   }
 
   Widget backgroundImage(ResponseMovieDetail? detail) {
@@ -126,22 +124,18 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         opacity: isImageMode ? 1.0 : 0.5,
         child: Image.network(posterPath != null ? imagePath + posterPath : "",
             errorBuilder: (context, error, stackTrace) {
-              return const Text("画像\nなし");
-            }),
+          return const Text("画像\nなし");
+        }),
       ),
     );
   }
 
   Widget detailItem(ResponseMovieDetail? detail) {
-    if (isImageMode) {
-      return const Spacer();
-    } else {
-      return Card(
-        child: ListTile(
-          title: Text(detail?.title ?? ""),
-        ),
-      );
-    }
+    return Card(
+      child: ListTile(
+        title: Text(detail?.title ?? ""),
+      ),
+    );
   }
 }
 
