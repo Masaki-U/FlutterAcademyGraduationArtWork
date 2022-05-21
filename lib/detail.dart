@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:model/ResponseMovieDetail.dart';
 import 'package:model/apiHandler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetail extends StatelessWidget {
   final int id;
@@ -70,7 +71,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(title),
+        title: const Text("映画詳細"),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -92,7 +93,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             // horizontal).
             children: [
               backgroundImage(_movieDetail),
-              isImageMode ? const Spacer() : detailItem(_movieDetail)
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: isImageMode
+                    ? const Spacer()
+                    : detailItem(title, _movieDetail),
+              )
             ]),
       ), // This trai
       floatingActionButton: isImageMode
@@ -130,11 +136,34 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     );
   }
 
-  Widget detailItem(ResponseMovieDetail? detail) {
-    return Card(
-      child: ListTile(
-        title: Text(detail?.title ?? ""),
-      ),
+  Widget detailItem(String title, ResponseMovieDetail? detail) {
+    return Column(
+      children: [
+        Card(
+          child: ListTile(
+            title: Text(title),
+          ),
+        ),
+        MaterialButton(
+            minWidth: double.infinity,
+            child: const Text("データベース"),
+            onPressed: () async {
+              final id = detail?.id;
+              final url = "https://www.themoviedb.org/movie/" + id.toString();
+              if (id != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            }),
+        MaterialButton(
+            minWidth: double.infinity,
+            child: const Text("公式サイト"),
+            onPressed: () async {
+              final url = detail?.homepage;
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
+              }
+            })
+      ],
     );
   }
 }
