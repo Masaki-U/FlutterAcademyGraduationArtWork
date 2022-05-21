@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:model/ResponseMovieDetail.dart';
 import 'package:model/apiHandler.dart';
@@ -141,9 +143,22 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       children: [
         Card(
           child: ListTile(
-            title: Text(title),
+            title: Text(title,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
           ),
         ),
+        Flexible(
+            child: Card(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+              const Padding(padding: EdgeInsets.only(left: 8, top: 8), child: Text(
+                    "評価",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                  )) ,
+              popular(detail?.voteAverage)
+            ]))),
+        const Expanded(child: Spacer()),
         MaterialButton(
             color: Theme.of(context).primaryColor,
             minWidth: double.infinity,
@@ -168,12 +183,76 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       ],
     );
   }
+
+  Widget popular(double? voteAverage) {
+    if (voteAverage == null) {
+      return const Spacer();
+    }
+    return Container(
+      width: 200,
+      height: 200,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.black,
+      ),
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          CustomPaint(painter: PopularityPainter(0xff413D17, math.pi * 2)),
+          CustomPaint(
+              painter: PopularityPainter(
+                  0xffD3D453, math.pi * 2 * voteAverage * 0.1)),
+          Row(
+            verticalDirection: VerticalDirection.up,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                (voteAverage * 10).toInt().toString(),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 56,
+                    fontWeight: FontWeight.w700),
+              ),
+              const Text(
+                "%",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 const imagePath = "https://image.tmdb.org/t/p/w1280";
 
 Widget button(String text) {
-  return Text(text, style: const TextStyle(
-      color: Colors.white
-  ),);
+  return Text(
+    text,
+    style: const TextStyle(color: Colors.white),
+  );
+}
+
+class PopularityPainter extends CustomPainter {
+  final int colorCode;
+  final double sweepAngle;
+
+  PopularityPainter(this.colorCode, this.sweepAngle);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint1 = Paint()
+      ..color = Color(colorCode)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10;
+    //draw arc
+    canvas.drawArc(const Offset(-90, -90) & const Size(180, 180), -math.pi / 2,
+        sweepAngle, false, paint1);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
