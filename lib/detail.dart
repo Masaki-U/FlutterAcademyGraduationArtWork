@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:model/ResponseMovieDetail.dart';
-import 'package:model/ResponseMovieSearch.dart';
 import 'package:model/apiHandler.dart';
 
 class MovieDetail extends StatelessWidget {
@@ -36,13 +35,14 @@ class MovieDetailPage extends StatefulWidget {
 }
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
-
   _MovieDetailPageState(this.id, this.title);
 
   ResponseMovieDetail? _movieDetail;
 
   final int id;
   final String title;
+
+  var isImageMode = false;
 
   void fetchDetailData(int id) {
     fetchMovieDetail(id, (res) {
@@ -75,41 +75,73 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            child: detailItem(_movieDetail)
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: Stack(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+            children: [
+              backgroundImage(_movieDetail),
+              detailItem(_movieDetail)
+            ]),
+      ), // This trai
+      floatingActionButton: floatingButton(), // ling comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Widget? detailItem(ResponseMovieDetail? detail) {
-    if (detail == null) return null;
-    final posterPath = detail.posterPath;
-    return Card(
-      child: ListTile(
-        title: Text(detail.title ?? ""),
-        leading: Image.network(posterPath != null ? imagePath + posterPath : "",
+  Widget floatingButton() {
+    if (isImageMode) {
+      return const Spacer();
+    } else {
+      return FloatingActionButton(
+        child: const Icon(Icons.image),
+        onPressed: () {
+          setState(() {
+            isImageMode = true;
+          });
+        },
+      );
+    }
+  }
+
+  Widget backgroundImage(ResponseMovieDetail? detail) {
+    final posterPath = detail?.posterPath;
+    return InkWell(
+      onTap: () {
+        setState(() {
+          isImageMode = false;
+        });
+      },
+      child: Opacity(
+        opacity: isImageMode ? 1.0 : 0.5,
+        child: Image.network(posterPath != null ? imagePath + posterPath : "",
             errorBuilder: (context, error, stackTrace) {
-          return const Text("画像\nなし");
-        }),
+              return const Text("画像\nなし");
+            }),
       ),
     );
+  }
+
+  Widget detailItem(ResponseMovieDetail? detail) {
+    if (isImageMode) {
+      return const Spacer();
+    } else {
+      return Card(
+        child: ListTile(
+          title: Text(detail?.title ?? ""),
+        ),
+      );
+    }
   }
 }
 
