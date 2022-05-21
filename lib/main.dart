@@ -215,12 +215,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Row(
                         children: [
-                          Flexible(
+                          Expanded(
                               child: Text(result.title ?? "",
                                   style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.w300))),
-                          const Spacer(),
                           IconButton(
                               onPressed: () {
                                 Navigator.pop(context);
