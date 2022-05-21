@@ -53,17 +53,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Results> _movieList = [];
+  final Set<Results> _movieList = {};
   List<Genres> _movieCategoryList = [];
 
   void fetchListData() {
-    fetchMovieList((res) {
+    isFetching = true;
+    fetchMovieList(currentPage, (res) {
       final result = res.results;
       if (result != null) {
+        var list = _movieList;
         setState(() {
-          _movieList = result;
+          _movieList.addAll(result);
         });
       }
+      isFetching = false;
     });
   }
 
@@ -83,6 +86,32 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     fetchListData();
     fetchCategoryData();
+    infiniteScroll();
+  }
+
+  final _controller = ScrollController();
+  var isFetching = false;
+  var currentPage = 1;
+
+  void infiniteScroll() {
+    _controller.addListener(() {
+      if (_isNeedFetch()) {
+        currentPage++;
+        fetchListData();
+      }
+    });
+  }
+
+  bool _isNeedFetch() {
+    final maxScrollExtent = _controller.position.maxScrollExtent;
+    final currentPosition = _controller.position.pixels;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    return !isFetching
+        && maxScrollExtent > 0
+        && (maxScrollExtent - screenHeight * 2) <= currentPosition;
   }
 
   @override
@@ -122,8 +151,9 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView.builder(
               itemCount: _movieList.length,
               itemBuilder: (listContext, idx) {
-                return listItem(context, _movieList[idx]);
+                return listItem(context, _movieList.elementAt(idx));
               },
+              controller: _controller,
             )),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

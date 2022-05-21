@@ -51,6 +51,11 @@ class Results {
   double? voteAverage;
   int? voteCount;
 
+  @override
+  bool operator ==(Object other) {
+    return other is Results && hashCode == other.hashCode;
+  }
+
   Results(
       {adult,
       backdropPath,
@@ -102,4 +107,8 @@ class Results {
     data['vote_count'] = voteCount;
     return data;
   }
+
+  @override
+  int get hashCode => id ?? 0;
+
 }

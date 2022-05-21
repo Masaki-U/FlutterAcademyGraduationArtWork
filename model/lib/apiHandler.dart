@@ -8,8 +8,8 @@ import 'ResponseMovieSearch.dart';
 import 'ResponseMovieCategory.dart';
 import 'apiKey.dart';
 
-Future fetchMovieList(Function(ResponseMovieSearch res) action) async {
-  await fetch(baseUrl + "discover/movie?&" + apiKey, ApiContext.common((json) {
+Future fetchMovieList(int fetchPage, Function(ResponseMovieSearch res) action) async {
+  await fetch(baseUrl + "discover/movie?page=" + fetchPage.toString() + "&" + apiKey, ApiContext.common((json) {
     action(ResponseMovieSearch.fromJson(json));
   }));
 }
